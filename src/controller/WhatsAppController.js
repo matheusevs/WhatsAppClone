@@ -21,7 +21,11 @@ class WhatsAppController {
 
     elementsPrototype(){
 
-        Element.prototype.hide
+        Element.prototype.hide = function (){
+
+            
+
+        }
 
     }
 
