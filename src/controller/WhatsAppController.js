@@ -1,4 +1,8 @@
-class WhatsAppController {
+import {Format} from './../util/Format';
+import {CameraController} from './CameraController';
+import {DocumentPreviewController} from './DocumentPreviewController';
+
+export class WhatsAppController {
     
     constructor(){
 
@@ -218,17 +222,41 @@ class WhatsAppController {
                 'height': 'calc(100% - 80px)'
             });
 
+            this._camera = new CameraController(this.el.videoCamera);
+
         });
 
         this.el.btnClosePanelCamera.on('click', e => {
 
             this.closeAllMainPanel();
             this.el.panelMessagesContainer.show();
+            this._camera.stop();
 
         });
 
         this.el.btnTakePicture.on('click', e =>{
 
+            let dataUrl = this._camera.takePicture();
+            this.el.pictureCamera.src = dataUrl;
+            this.el.pictureCamera.show();
+            this.el.videoCamera.hide();
+            this.el.btnReshootPanelCamera.show();
+            this.el.containerTakePicture.hide();
+            this.el.containerSendPicture.show();
+
+        });
+
+        this.el.btnReshootPanelCamera.on('click', e => {
+            this.el.pictureCamera.hide();
+            this.el.videoCamera.show();
+            this.el.btnReshootPanelCamera.hide();
+            this.el.containerTakePicture.show();
+            this.el.containerSendPicture.hide();
+        });
+
+        this.el.btnSendPicture.on('click', e => {
+
+            this.el.pictureCamera
 
         });
 
@@ -239,6 +267,66 @@ class WhatsAppController {
             this.el.panelDocumentPreview.css({
                 'height': 'calc(100% - 80px)'
             });
+            this.el.inputDocument.click();
+
+        });
+
+        this.el.inputDocument.on('change', e => {
+
+            if(this.el.inputDocument.files.length){
+
+                this.el.panelDocumentPreview.css({
+                    'height': '1%'
+                });
+
+                let file = this.el.inputDocument.files[0];
+
+                this._documentPreviewController = new DocumentPreviewController(file);
+
+                this._documentPreviewController.getPreviewData().then(result => {
+
+                    this.el.imgPanelDocumentPreview.src = result.src;
+                    this.el.infoPanelDocumentPreview.innerHTML = result.info;
+                    this.el.imagePanelDocumentPreview.show();
+                    this.el.filePanelDocumentPreview.hide();
+
+                    this.el.panelDocumentPreview.css({
+                        'height': 'calc(100% - 80px)'
+                    });
+
+                }).catch(error => {
+
+                    this.el.panelDocumentPreview.css({
+                        'height': 'calc(100% - 80px)'
+                    });
+
+                    switch(file.type){
+                        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                        case 'application/msword':
+                        this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-doc';
+                        break;
+ 
+                        case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                        case 'application/vnd.ms-excel':
+                        this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-xls';
+                        break;
+ 
+                        case 'application/vnd.ms-powerpoint':
+                        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                        this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-ppt';
+                        break;
+ 
+                        default:
+                        this.el.iconPanelDocumentPreview.className = 'jcxhw icon-doc-generic';
+                    }
+
+                    this.el.filenamePanelDocumentPreview.innerHTML = file.name;
+                    this.el.imagePanelDocumentPreview.hide();
+                    this.el.filePanelDocumentPreview.show();
+
+                });
+
+            }
 
         });
 
@@ -272,6 +360,87 @@ class WhatsAppController {
         this.el.btnFinishMicrophone.on('click', e => {
 
             this.closeRecordMicrophone();
+
+        });
+
+        this.el.inputText.on('keyup', e => {
+
+            if(this.el.inputText.innerHTML.length){
+
+                this.el.inputPlaceholder.hide();
+                this.el.btnSendMicrophone.hide();
+                this.el.btnSend.show();
+
+
+            } else {
+
+                this.el.inputPlaceholder.show();
+                this.el.btnSendMicrophone.show();
+                this.el.btnSend.hide();
+
+
+            }
+
+        });
+
+        this.el.btnSend.on('click', e => {
+
+            console.log(this.el.inputText.innerHTML)
+
+        });
+
+        this.el.inputText.on('keypress', e => {
+            
+            if(e.key === 'Enter' && !e.ctrlKey){
+
+                e.preventDefault();
+                this.el.btnSend.click();
+
+            }
+        
+        });
+
+        this.el.btnEmojis.on('click', e => {
+
+            this.el.panelEmojis.toggleClass('open');
+
+        });
+        
+        this.el.panelEmojis.querySelectorAll('.emojik').forEach(emoji => {
+
+            emoji.on('click', e => {
+
+                let img = this.el.imgEmojiDefault.cloneNode();
+                img.style.cssText = emoji.style.cssText;
+                img.dataset.unicode = emoji.dataset.unicode;
+                img.alt = emoji.dataset.unicode;
+
+                emoji.classList.forEach(name => {
+                    img.classList.add(name);
+                });
+
+                this.el.inputText.appendChild(img);
+
+                let cursor = window.getSelection();
+                let range = document.createRange();
+                let frag = document.createDocumentFragment();
+
+                if(!cursor.focusNode || !cursor.focusNode.id == 'input-text'){
+                    this.el.inputText.focus();
+                    cursor = window.getSelection();
+                }
+
+                range = cursor.getRangeAt(0);
+                range.deleteContents();
+
+                frag.appendChild(img);
+                range.insertNode(frag);
+                range.setStartAfter(img);
+
+                
+                this.el.inputText.dispatchEvent(new Event('keyup'));
+
+            });
 
         });
 

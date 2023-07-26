@@ -11380,6 +11380,8 @@ html[dir=rtl] ._3KiSR{
     z-index:2
 }
 ._2oKVP{
+    display: flex;
+    justify-content: center;
     opacity:1;
     transition:opacity .3s cubic-bezier(.1,.82,.25,1)
 }
@@ -16135,4 +16137,9 @@ html[dir=rtl] ._2ICcy:after{
 }
 #main {
     display:none;
+}
+#picture-camera{
+    height: 100%;
+    width: auto;
+    text-align: center;
 }
