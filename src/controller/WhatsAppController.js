@@ -3,6 +3,7 @@ import { CameraController } from './CameraController';
 import { MicrophoneController } from './MicrophoneController';
 import { DocumentPreviewController } from './DocumentPreviewController';
 import { Firebase } from './../util/Firebase';
+import { User } from '../model/User';
 
 export class WhatsAppController {
     
@@ -19,10 +20,45 @@ export class WhatsAppController {
     initAuth(){
         this._firebase.initAuth().then(response => {
 
-            this._user = response.user;
-            this.el.appContent.css({
-                display: 'flex'
+            this._user = new User(response.user.email);
+
+            this._user.on('datachange', data => {
+                
+                document.querySelector('title').innerHTML = `${data.name} - Whatsapp Clone`;
+                
+                this.el.inputNamePanelEditProfile.innerHTML = data.name;
+
+                if(data.photo){
+
+                    let photo = this.el.photoContainerEditProfile.querySelector('img');
+                    photo.src = data.photo;
+                    photo.show();
+                    this.el.imgDefaultPanelEditProfile.hide();
+
+                    let photo2 = this.el.myPhoto.querySelector('img');
+                    photo2.src = data.photo;
+                    photo2.show();
+
+                }
+
             });
+
+            this._user.name = response.user.displayName;
+            this._user.email = response.user.email;
+            this._user.photo = response.user.photoURL;
+
+            this._user.save().then(() => {
+
+                this.el.appContent.css({
+                    display: 'flex'
+                });
+
+            }).catch(error => {
+
+                console.error(error);
+            
+            });
+
 
         }).catch(error => {
 
@@ -172,7 +208,14 @@ export class WhatsAppController {
 
         this.el.btnSavePanelEditProfile.on('click', e => {
 
-            console.log(this.el.inputNamePanelEditProfile.innerHTML);
+            this.el.inputNamePanelEditProfile.disabled = true;
+            this._user.name = this.el.inputNamePanelEditProfile.innerHTML;
+
+            this._user.save().then(() => {
+
+                this.el.inputNamePanelEditProfile.disabled = false;
+                
+            });
 
         });
 
