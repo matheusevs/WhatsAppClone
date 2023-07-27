@@ -214,7 +214,7 @@ export class WhatsAppController {
             this._user.save().then(() => {
 
                 this.el.inputNamePanelEditProfile.disabled = false;
-                
+
             });
 
         });
@@ -224,6 +224,30 @@ export class WhatsAppController {
             e.preventDefault();
 
             let formData = new FormData(this.el.formPanelAddContact);
+            let contact = new User(formData.get('email'));
+
+            contact.on('datachange', data => {
+
+                if(data.name) {
+
+                    this._user.addContact(contact).then(() => {
+
+                        console.info('Contato foi adicionado');
+                        this.el.btnClosePanelAddContact.click();
+                        
+                    }).catch(error => {
+
+                        console.error(error);
+
+                    });
+
+                } else {
+
+                    console.error('Usuário não foi encontrado.');
+
+                }
+
+            });
 
         });
 
