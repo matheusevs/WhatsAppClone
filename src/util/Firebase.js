@@ -6,7 +6,7 @@ export class Firebase {
 
     constructor(){
 
-        // Coloque a configuração do seu firebase aqui
+        // Coloque a configuração do seu firebase aqui 
         this._config = {
             apiKey: "",
             authDomain: "",
