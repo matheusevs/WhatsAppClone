@@ -119,13 +119,8 @@ export class Message extends Model {
                                             </div>
                                         </div>
                                     </div>
-                                    <img src="#" class="_1JVSX message-photo" style="width: 100%; display:none">
+                                    <img src="${this.content}" class="_1JVSX message-photo" style="width: 100%; display:none">
                                     <div class="_1i3Za"></div>
-                                </div>
-                                <div class="message-container-legend">
-                                    <div class="_3zb-j ZhF0n">
-                                        <span dir="ltr" class="selectable-text invisible-space copyable-text message-text">Texto da foto</span>
-                                    </div>
                                 </div>
                                 <div class="_2TvOE">
                                     <div class="_1DZAH text-white" role="button">
@@ -144,6 +139,18 @@ export class Message extends Model {
                         </div>
                     </div>
                 `;
+
+
+                div.querySelector('.message-photo').on('load', e => {
+
+                    div.querySelector('.message-photo').show();
+                    div.querySelector('._34Olu').hide();
+                    div.querySelector('._3v3PK').css({
+                        height: 'auto'
+                    });
+
+                });
+
             break;
 
             case 'document':
@@ -303,9 +310,48 @@ export class Message extends Model {
 
     }
 
+    static sendImage(chatId, from, file){
+
+        return new Promise((s, f) => {
+
+            let uploadTask = Firebase.hd().ref(from).child(Date.now() + '_' + file.name).put(file);
+            
+            uploadTask.on('state_changed', e => {
+    
+                // console.info(e);
+    
+            }, error => {
+    
+                console.error(error);
+    
+            }, () => {
+    
+                uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+
+                    Message.send(
+                        chatId,
+                        from,
+                        'image',
+                        downloadURL
+                    ).then(() => {
+    
+                        s();
+    
+                    }).catch(error => {
+    
+                        console.error(error);
+    
+                    });
+
+                });
+                
+            });
+
+        });
+
+    }
+
     static send(chatId, from, type, content){
-
-
 
         return new Promise((s, f) =>{
 
