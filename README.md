@@ -1,11 +1,32 @@
-# Projeto WhatsApp Clone - Em andamento
+# Projeto WhatsApp Clone
 
-[![Hcode Treinamentos](https://www.hcode.com.br/res/img/hcode-200x100.png)](https://www.hcode.com.br)
+---
 
-Projeto desenvolvido como exemplo do Curso Completo de JavaScript na Udemy.com.
+# Orientações
 
-### Projeto
-![WhatsApp Clone](https://firebasestorage.googleapis.com/v0/b/hcode-com-br.appspot.com/o/whatsapp.jpg?alt=media&token=5fc78e3b-4871-424f-abfa-b765f2515d0c)
+Segue as orientações gerais para desenvolvedores que desejarem rodar o projeto em sua máquina.
+
+** Para rodar o projeto em seu computador, é necessario ter instalado: 
+
+- <a href="https://nodejs.org/en/">NodeJS - v14.20.1</a>
+
+**Após a instalação de todos as ferramentas acima, rode os seguintes comandos em seu terminal:**
+
+```bash
+git clone https://github.com/matheusevs/WhatsAppClone.git
+cd WhatsAppClone
+npm install
+npm install pdfjs-dist@2.0.489 --save
+npm start
+```
+
+**Após rodar todos os comandos, acesse a url http://localhost:8080/ para ter acesso a aplicação**
+
+**Lembrando que para execução desse projeto, é necessário ter o firebase configurado no projeto.**
+
+- <a href="https://www.youtube.com/watch?v=xJ6tEOcOBhY">Vídeo para configuração do firebase.</a>
+
+---
 
 ### Recursos Usados
 
