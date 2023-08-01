@@ -100,7 +100,7 @@ export class User extends Model {
 
                 docs.forEach(doc => {
 
-                    let data = doc.data;
+                    let data = doc.data();
                     data.id = doc.id;
                     contacts.push(data);
 
