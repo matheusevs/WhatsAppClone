@@ -28,6 +28,9 @@ npm start
 
 ---
 
+<img src="img/gif.gif">
+
+
 ### Recursos Usados
 
 Lista de recursos usados em aula para este projeto
