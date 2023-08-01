@@ -16143,3 +16143,6 @@ html[dir=rtl] ._2ICcy:after{
     width: auto;
     text-align: center;
 }
+div#panel-messages-container{
+    padding-top: 20px;
+}

@@ -237,7 +237,7 @@ export class WhatsAppController {
         this._contactActive = contact;
 
         this.el.activeName.innerHTML = contact.name;
-        this.el.activeStatus.innerHTML = contact.status;
+        this.el.activeStatus.innerHTML = 'Online';
 
         if(contact.photo){
             
